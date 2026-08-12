@@ -20,8 +20,13 @@
   --line:rgba(255,255,255,.10);
 }
 
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+* {
+  box-sizing:border-box;
+}
+
+html {
+  scroll-behavior:smooth;
+}
 
 body {
   margin:0;
@@ -267,8 +272,26 @@ section {
   font-size:25px;
 }
 
-.paypal {
-  min-height:50px;
+.paypal-link {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:48px;
+  padding:13px 18px;
+  border-radius:12px;
+  background:#ffc439;
+  color:#111 !important;
+  font-family:"DM Sans",sans-serif;
+  font-size:14px;
+  font-weight:800;
+  text-decoration:none !important;
+  transition:transform .2s ease, filter .2s ease;
+}
+
+.paypal-link:hover {
+  transform:translateY(-2px);
+  filter:brightness(1.04);
 }
 
 .connect {
@@ -305,6 +328,7 @@ footer {
 }
 
 @media(max-width:760px) {
+
   .nav-right a:not(.website) {
     display:none;
   }
@@ -327,14 +351,12 @@ footer {
 }
 
 @media(max-width:430px) {
+
   .gallery {
     grid-template-columns:1fr;
   }
 }
 </style>
-
-<!-- PAYPAL -->
-<script src="https://www.paypal.com/sdk/js?client-id=BAACWrOZGBoLD1PBXPGGah4srdcZqNI2VoSQtQs9DrRk-S1ifsfeNGGApOgMRaiXABp7mFamWVbGNc_41w&components=hosted-buttons&currency=USD"></script>
 
 </head>
 
@@ -356,11 +378,17 @@ footer {
       Official Website ↗
     </a>
 
-    <a href="#about">About</a>
+    <a href="#about">
+      About
+    </a>
 
-    <a href="#collections">Collections</a>
+    <a href="#collections">
+      Collections
+    </a>
 
-    <a href="#connect">Connect</a>
+    <a href="#connect">
+      Connect
+    </a>
 
   </div>
 
@@ -411,6 +439,7 @@ footer {
       </div>
 
     </div>
+
 
     <div>
 
@@ -513,10 +542,13 @@ footer {
         <strong>$15</strong>
       </div>
 
-      <div
-        id="paypal-container-8CCEFQ455TEYL"
-        class="paypal">
-      </div>
+      <a
+        class="paypal-link"
+        href="https://www.paypal.com/ncp/payment/8CCEFQ455TEYL"
+        target="_blank"
+        rel="noopener">
+        Pay with PayPal
+      </a>
 
     </article>
 
@@ -546,10 +578,13 @@ footer {
         <strong>$25</strong>
       </div>
 
-      <div
-        id="paypal-container-D8LGTN2DFEBZQ"
-        class="paypal">
-      </div>
+      <a
+        class="paypal-link"
+        href="https://www.paypal.com/ncp/payment/D8LGTN2DFEBZQ"
+        target="_blank"
+        rel="noopener">
+        Pay with PayPal
+      </a>
 
     </article>
 
@@ -579,15 +614,18 @@ footer {
         <strong>$35</strong>
       </div>
 
-      <div
-        id="paypal-container-U7VE7HDUCNHFJ"
-        class="paypal">
-      </div>
+      <a
+        class="paypal-link"
+        href="https://www.paypal.com/ncp/payment/U7VE7HDUCNHFJ"
+        target="_blank"
+        rel="noopener">
+        Pay with PayPal
+      </a>
 
     </article>
 
 
-    <!-- PREMIUM -->
+    <!-- 5 PHOTOS + 2 VIDEOS -->
 
     <article class="package">
 
@@ -612,10 +650,13 @@ footer {
         <strong>$50</strong>
       </div>
 
-      <div
-        id="paypal-container-C5YWVS3HJPPC"
-        class="paypal">
-      </div>
+      <a
+        class="paypal-link"
+        href="https://www.paypal.com/ncp/payment/C5YWVS3HJPPC"
+        target="_blank"
+        rel="noopener">
+        Pay with PayPal
+      </a>
 
     </article>
 
@@ -649,10 +690,13 @@ footer {
         <strong>$75</strong>
       </div>
 
-      <div
-        id="paypal-container-SWF5ESTWYXX76"
-        class="paypal">
-      </div>
+      <a
+        class="paypal-link"
+        href="https://www.paypal.com/ncp/payment/SWF5E5TWYXX76"
+        target="_blank"
+        rel="noopener">
+        Pay with PayPal
+      </a>
 
     </article>
 
@@ -677,6 +721,7 @@ footer {
     style="margin:auto">
     Follow the official channels for updates and new releases.
   </p>
+
 
   <div class="links">
 
@@ -712,51 +757,6 @@ footer {
 <footer>
   SIENNA • 2026
 </footer>
-
-
-<!-- PAYPAL BUTTONS -->
-
-<script>
-
-if (window.paypal && paypal.HostedButtons) {
-
-  paypal.HostedButtons({
-    hostedButtonId:"8CCEFQ455TEYL"
-  }).render(
-    "#paypal-container-8CCEFQ455TEYL"
-  );
-
-
-  paypal.HostedButtons({
-    hostedButtonId:"D8LGTN2DFEBZQ"
-  }).render(
-    "#paypal-container-D8LGTN2DFEBZQ"
-  );
-
-
-  paypal.HostedButtons({
-    hostedButtonId:"U7VE7HDUCNHFJ"
-  }).render(
-    "#paypal-container-U7VE7HDUCNHFJ"
-  );
-
-
-  paypal.HostedButtons({
-    hostedButtonId:"C5YWVS3HJPPC"
-  }).render(
-    "#paypal-container-C5YWVS3HJPPC"
-  );
-
-
-  paypal.HostedButtons({
-    hostedButtonId:"SWF5ESTWYXX76"
-  }).render(
-    "#paypal-container-SWF5ESTWYXX76"
-  );
-
-}
-
-</script>
 
 </body>
 </html>
