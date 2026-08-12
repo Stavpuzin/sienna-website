@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sienna | Enter My World</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+:root{--bg:#070707;--card:#151116;--pink:#ff3fa4;--pink2:#ff83c8;--text:#faf7fa;--muted:#aaa3a8;--line:rgba(255,255,255,.10)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif}a{text-decoration:none;color:inherit}img{display:block;width:100%;object-fit:cover}
+nav{position:fixed;z-index:20;top:0;left:0;right:0;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;background:rgba(7,7,7,.74);backdrop-filter:blur(15px);border-bottom:1px solid rgba(255,255,255,.06)}
+.logo{font:italic 600 26px "Playfair Display",serif}.logo b{color:var(--pink)}.navlinks{display:flex;gap:26px;font-size:13px}.navlinks a{color:#ddd}.navlinks a:hover{color:var(--pink2)}
+.hero{min-height:100vh;display:grid;place-items:center;text-align:center;position:relative;overflow:hidden;padding:120px 6% 70px}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.18),rgba(7,7,7,.94)),url("assets/image_01.jpeg") center/cover;z-index:-2}
+.hero:after{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:#ff3fa425;filter:blur(130px);z-index:-1}
+.hero-inner{max-width:850px;animation:rise 1s ease}.eyebrow,.kicker{color:var(--pink2);text-transform:uppercase;letter-spacing:.25em;font-size:11px}
+h1,h2,h3{font-family:"Playfair Display",serif;font-weight:500}h1{font-size:clamp(68px,12vw,150px);line-height:.9;margin:18px 0}h1 i,h2 i{color:var(--pink)}
+.hero p{max-width:570px;margin:0 auto 32px;color:#ddd;line-height:1.8}.cta{display:inline-flex;padding:15px 28px;border-radius:999px;background:linear-gradient(135deg,var(--pink),#df1c85);font-weight:800;box-shadow:0 12px 40px #ff3fa440;transition:.25s}.cta:hover{transform:translateY(-3px) scale(1.02)}
+section{max-width:1180px;margin:auto;padding:95px 6%}.kicker{color:var(--pink);margin-bottom:10px}h2{font-size:clamp(40px,6vw,68px);margin:0 0 18px}.intro{color:var(--muted);max-width:700px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:35px}.gallery-item{aspect-ratio:3/4;border-radius:18px;overflow:hidden;border:1px solid var(--line)}.gallery-item img{height:100%;transition:.6s}.gallery-item:hover img{transform:scale(1.06)}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}.about-photo{aspect-ratio:4/5;border-radius:22px;overflow:hidden;border:1px solid var(--line)}.about-photo img{height:100%}.about-copy{color:var(--muted);line-height:1.9;margin:25px 0}
+.packages{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:40px}.package{position:relative;background:linear-gradient(145deg,#181219,#0e0e10);border:1px solid var(--line);border-radius:22px;padding:18px;overflow:hidden;transition:.3s}.package:hover{transform:translateY(-6px);border-color:#ff3fa477;box-shadow:0 25px 60px #0009}.package.featured{border-color:#ff3fa499}.badge{position:absolute;right:14px;top:14px;background:var(--pink);padding:6px 10px;border-radius:20px;font-size:10px;font-weight:800;text-transform:uppercase;z-index:2}.preview{aspect-ratio:4/3;border-radius:15px;overflow:hidden}.preview img{height:100%}.package h3{font-size:29px;margin:20px 0 7px}.desc{color:var(--muted);min-height:46px;line-height:1.55}.meta{display:flex;justify-content:space-between;align-items:center;margin:20px 0;font-weight:600}.price{font-size:25px}.buy{display:block;text-align:center;width:100%;padding:14px;border-radius:11px;background:#29212a;font-weight:800;transition:.25s}.buy:hover{background:var(--pink)}
+.social{text-align:center;background:radial-gradient(circle,#ff3fa418,transparent 55%)}.links{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:30px}.social-btn{padding:14px 24px;border:1px solid var(--line);border-radius:999px;background:#101012;transition:.25s}.social-btn:hover{border-color:var(--pink);color:var(--pink2);transform:translateY(-2px)}
+.final{text-align:center;padding:125px 6%;background:linear-gradient(#07070788,#070707f2),url("assets/image_07.jpeg") center/cover}.final p{color:var(--muted);max-width:500px;margin:18px auto 30px}
+footer{padding:38px 6%;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:#777;font-size:13px}
+.reveal{opacity:0;transform:translateY(25px);transition:.75s}.reveal.show{opacity:1;transform:none}
+@keyframes rise{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:none}}
+@media(max-width:800px){.navlinks{display:none}.about{grid-template-columns:1fr}.gallery{grid-template-columns:repeat(2,1fr)}.packages{grid-template-columns:1fr}section{padding:75px 5%}footer{flex-direction:column;gap:12px;text-align:center}}
+@media(max-width:430px){.gallery{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><a class="logo" href="#">SIENNA<b>.</b></a><div class="navlinks"><a href="#about">About</a><a href="#gallery">Gallery</a><a href="#packages">Exclusive</a><a href="#connect">Connect</a></div></nav>
+
+<header class="hero">
+<div class="hero-inner">
+<div class="eyebrow">Official creator space</div>
+<h1>Si<i>enna</i></h1>
+<p>Welcome to my world. Discover my style, curated collections and exclusive creator updates.</p>
+<a class="cta" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">Enter My World ↗</a>
+</div>
+</header>
+
+<section id="about" class="reveal">
+<div class="about">
+<div class="about-photo"><img src="assets/image_02.jpeg" alt="Sienna"></div>
+<div><div class="kicker">About</div><h2>Welcome to my <i>world.</i></h2><p class="about-copy">A premium space designed to bring my visual style, updates and curated collections together in one place.</p><a class="cta" href="#packages">Explore Collections →</a></div>
+</div>
+</section>
+
+<section id="gallery">
+<div class="reveal"><div class="kicker">Gallery</div><h2>A glimpse into my <i>world.</i></h2><p class="intro">Selected previews from the latest collection.</p></div>
+<div class="gallery">
+<div class="gallery-item reveal"><img src="assets/image_01.jpeg" alt="Sienna preview"></div>
+<div class="gallery-item reveal"><img src="assets/image_02.jpeg" alt="Sienna preview"></div>
+<div class="gallery-item reveal"><img src="assets/image_03.jpeg" alt="Sienna preview"></div>
+<div class="gallery-item reveal"><img src="assets/image_04.png" alt="Sienna preview"></div>
+<div class="gallery-item reveal"><img src="assets/image_05.jpeg" alt="Sienna preview"></div>
+<div class="gallery-item reveal"><img src="assets/image_06.jpeg" alt="Sienna preview"></div>
+<div class="gallery-item reveal"><img src="assets/image_07.jpeg" alt="Sienna preview"></div>
+</div>
+</section>
+
+<section id="packages">
+<div class="reveal"><div class="kicker">Exclusive</div><h2>Choose your <i>experience.</i></h2><p class="intro">Five simple collection options. Purchase and access are handled through the official external platform.</p></div>
+<div class="packages">
+
+<article class="package reveal"><div class="preview"><img src="assets/image_01.jpeg" alt="Mini"></div><h3>Mini</h3><p class="desc">A small curated photo collection.</p><div class="meta"><span>3 Photos</span><span class="price">$15</span></div><a class="buy" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">View on Fanvue ↗</a></article>
+
+<article class="package reveal"><div class="preview"><img src="assets/image_03.jpeg" alt="Photo"></div><h3>Photo</h3><p class="desc">A larger selected photo collection.</p><div class="meta"><span>5 Photos</span><span class="price">$25</span></div><a class="buy" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">View on Fanvue ↗</a></article>
+
+<article class="package reveal"><div class="preview"><img src="assets/image_04.png" alt="Video"></div><h3>Video</h3><p class="desc">A collection combining photos and video content.</p><div class="meta"><span>3 Photos + 1 Video</span><span class="price">$35</span></div><a class="buy" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">View on Fanvue ↗</a></article>
+
+<article class="package featured reveal"><div class="badge">Most Popular</div><div class="preview"><img src="assets/image_05.jpeg" alt="Premium"></div><h3>Premium</h3><p class="desc">A larger collection with additional video content.</p><div class="meta"><span>5 Photos + 2 Videos</span><span class="price">$50</span></div><a class="buy" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">View on Fanvue ↗</a></article>
+
+<article class="package featured reveal" style="grid-column:1/-1"><div class="badge">Best Value</div><div class="preview"><img src="assets/image_07.jpeg" alt="VIP"></div><h3>VIP</h3><p class="desc">The largest featured collection.</p><div class="meta"><span>7 Photos + 3 Videos</span><span class="price">$75</span></div><a class="buy" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">View on Fanvue ↗</a></article>
+
+</div>
+</section>
+
+<section id="connect" class="social reveal">
+<div class="kicker">Connect</div><h2>Let's <i>connect.</i></h2><p class="intro" style="margin:auto">Follow the official channels for updates and new releases.</p>
+<div class="links">
+<a class="social-btn" href="https://t.me/siennaa1" target="_blank" rel="noopener">Telegram ↗</a>
+<a class="social-btn" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">Fanvue ↗</a>
+<a class="social-btn" href="YOUR_FACEBOOK_URL" target="_blank" rel="noopener">Facebook ↗</a>
+<a class="social-btn" href="YOUR_WEBSITE_URL" target="_blank" rel="noopener">My Website ↗</a>
+</div>
+</section>
+
+<section class="final reveal">
+<div class="kicker">Come closer</div><h2>Ready to enter my <i>world?</i></h2><p>Explore the collections and continue to the official platform.</p><a class="cta" href="https://fanvue.com/siennaxo_official" target="_blank" rel="noopener">Join Me ↗</a>
+</section>
+
+<footer><div class="logo">SIENNA<b>.</b></div><div>© 2026 Sienna. All rights reserved.</div></footer>
+
+<script>
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show")}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(e=>observer.observe(e));
+</script>
+</body>
+</html>
