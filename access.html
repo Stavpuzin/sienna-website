@@ -1,248 +1,228 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sienna | Your Collection</title>
-<meta name="description" content="Sienna Premium — private collection access">
+import { useEffect, useState, useCallback } from "react";
+import { useParams, Link } from "react-router-dom";
+import { base44 } from "@/api/base44Client";
+import { getPackagePublic, PORTAL_IMAGE } from "@/lib/packages";
+import { Image } from "@/components/ui/image";
+import PayButton from "@/components/sienna/PayButton";
+import AssetTile from "@/components/sienna/AssetTile";
+import {
+  ShieldCheck,
+  Loader2,
+  Lock,
+  ArrowLeft,
+  AlertCircle,
+  CheckCircle2,
+  RefreshCw,
+  Gift
+} from "lucide-react";
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600&display=swap');
-
-:root{
-  --bg:#070707;--card:#121013;--card2:#191319;
-  --pink:#ff3f9f;--pink2:#ff8bc9;--white:#fff;
-  --muted:#aaa5aa;--line:rgba(255,255,255,.10);
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--white);font-family:"DM Sans",sans-serif}
-a{color:inherit;text-decoration:none}
-.nav{
-  position:sticky;top:0;z-index:10;display:flex;align-items:center;
-  justify-content:space-between;padding:18px 5%;
-  background:rgba(7,7,7,.82);backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,255,255,.07)
-}
-.logo{font:italic 600 27px "Playfair Display",serif;letter-spacing:.08em}
-.logo span{color:var(--pink)}
-.back{font-size:13px;color:#ddd}
-.back:hover{color:var(--pink2)}
-
-main{max-width:1120px;margin:auto;padding:80px 6% 110px}
-.hero{text-align:center;padding:30px 0 55px}
-.kicker{color:var(--pink2);text-transform:uppercase;letter-spacing:.26em;font-size:11px}
-h1,h2,h3{font-family:"Playfair Display",serif;font-weight:500}
-h1{font-size:clamp(48px,9vw,92px);line-height:.95;margin:16px 0}
-h1 i,h2 i{color:var(--pink)}
-.subtitle{color:var(--muted);line-height:1.8;max-width:650px;margin:auto}
-
-.notice{
-  margin:0 auto 35px;max-width:720px;padding:14px 18px;border-radius:14px;
-  border:1px solid rgba(255,63,159,.25);background:rgba(255,63,159,.06);
-  color:#d8d2d8;font-size:13px;line-height:1.6;text-align:center
-}
-
-.collection{
-  border:1px solid var(--line);border-radius:26px;padding:22px;
-  background:linear-gradient(145deg,var(--card2),#0e0e10);
-  box-shadow:0 25px 80px rgba(0,0,0,.3)
-}
-.collection-head{
-  display:flex;justify-content:space-between;align-items:flex-end;
-  gap:20px;margin-bottom:22px
-}
-.collection h2{font-size:36px;margin:8px 0}
-.price{font-size:26px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-
-.asset{
-  aspect-ratio:3/4;border-radius:18px;overflow:hidden;
-  border:1px solid var(--line);background:#0b0b0d;
-  position:relative;display:flex;align-items:center;justify-content:center
-}
-.asset img,.asset video{width:100%;height:100%;object-fit:cover;display:block}
-.asset video{background:#000}
-.empty{
-  color:#777;text-align:center;font-size:10px;letter-spacing:.14em;
-  text-transform:uppercase;padding:20px
-}
-.empty .lock{font-size:28px;margin-bottom:10px}
-
-.footer{
-  text-align:center;color:#777;font-size:13px;margin-top:55px;
-  padding-top:30px;border-top:1px solid var(--line)
-}
-
-@media(max-width:760px){
-  main{padding-top:55px}
-  .collection-head{align-items:flex-start;flex-direction:column}
-  .grid{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:430px){
-  .grid{grid-template-columns:1fr}
-}
-</style>
-</head>
-
-<body>
-
-<nav class="nav">
-  <a class="logo" href="index.html">SIENNA<span>.</span></a>
-  <a class="back" href="index.html">← Back to website</a>
-</nav>
-
-<main>
-  <header class="hero">
-    <div class="kicker">Private collection</div>
-    <h1>Your <i>collection.</i></h1>
-    <p class="subtitle">
-      Thank you for your purchase. Your selected collection is shown below.
-    </p>
-  </header>
-
-  <div id="notice" class="notice"></div>
-
-  <section id="collection" class="collection">
-    <div class="collection-head">
-      <div>
-        <div class="kicker">Sienna Premium</div>
-        <h2 id="packageName">Collection</h2>
-      </div>
-      <div class="price" id="packagePrice"></div>
+function SectionHeading({ label, count }) {
+  return (
+    <div className="flex items-baseline justify-between mb-4">
+      <h2 className="font-heading text-2xl">{label}</h2>
+      <span className="text-xs text-white/40 tracking-wider">
+        {count} {count === 1 ? "item" : "items"}
+      </span>
     </div>
+  );
+}
 
-    <div id="assets" class="grid"></div>
-  </section>
+export default function Access() {
+  const { packageId } = useParams();
+  const pkg = getPackagePublic(packageId);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [capturing, setCapturing] = useState(false);
+  const [justPaid, setJustPaid] = useState(false);
+  const [error, setError] = useState("");
 
-  <footer class="footer">
-    SIENNA • 2026
-  </footer>
-</main>
-
-<script>
-/*
-  IMPORTANT:
-  This page is a presentation layer only.
-
-  Do NOT use the URL "?paid=1" as proof of payment.
-  A real payment system must verify the PayPal transaction
-  on a server/webhook before revealing private files.
-
-  After your payment verification is connected, replace the
-  asset URLs below with your protected/signed file URLs.
-*/
-
-const packages = {
-  photos3: {
-    name: "3 Photos",
-    price: "$15",
-    items: [
-      {type:"image", title:"Photo 01", url:""},
-      {type:"image", title:"Photo 02", url:""},
-      {type:"image", title:"Photo 03", url:""}
-    ]
-  },
-
-  photos5: {
-    name: "5 Photos",
-    price: "$25",
-    items: [
-      {type:"image", title:"Photo 01", url:""},
-      {type:"image", title:"Photo 02", url:""},
-      {type:"image", title:"Photo 03", url:""},
-      {type:"image", title:"Photo 04", url:""},
-      {type:"image", title:"Photo 05", url:""}
-    ]
-  },
-
-  videos2: {
-    name: "2 Videos",
-    price: "$35",
-    items: [
-      {type:"video", title:"Video 01", url:""},
-      {type:"video", title:"Video 02", url:""}
-    ]
-  },
-
-  photos5videos2: {
-    name: "5 Photos + 2 Videos",
-    price: "$50",
-    items: [
-      {type:"image", title:"Photo 01", url:""},
-      {type:"image", title:"Photo 02", url:""},
-      {type:"image", title:"Photo 03", url:""},
-      {type:"image", title:"Photo 04", url:""},
-      {type:"image", title:"Photo 05", url:""},
-      {type:"video", title:"Video 01", url:""},
-      {type:"video", title:"Video 02", url:""}
-    ]
-  },
-
-  vip: {
-    name: "VIP • 7 Photos + 3 Videos",
-    price: "$75",
-    items: [
-      {type:"image", title:"Photo 01", url:""},
-      {type:"image", title:"Photo 02", url:""},
-      {type:"image", title:"Photo 03", url:""},
-      {type:"image", title:"Photo 04", url:""},
-      {type:"image", title:"Photo 05", url:""},
-      {type:"image", title:"Photo 06", url:""},
-      {type:"image", title:"Photo 07", url:""},
-      {type:"video", title:"Video 01", url:""},
-      {type:"video", title:"Video 02", url:""},
-      {type:"video", title:"Video 03", url:""}
-    ]
-  }
-};
-
-const params = new URLSearchParams(window.location.search);
-const id = params.get("package") || "photos3";
-const pkg = packages[id] || packages.photos3;
-
-document.getElementById("packageName").textContent = pkg.name;
-document.getElementById("packagePrice").textContent = pkg.price;
-
-const notice = document.getElementById("notice");
-const assets = document.getElementById("assets");
-
-notice.textContent =
-  "Payment verification must be completed before private files are displayed. " +
-  "The placeholders below are ready for your protected content.";
-
-pkg.items.forEach((item) => {
-  const card = document.createElement("div");
-  card.className = "asset";
-
-  if (item.url) {
-    if (item.type === "video") {
-      const video = document.createElement("video");
-      video.controls = true;
-      video.preload = "metadata";
-      video.src = item.url;
-      video.setAttribute("aria-label", item.title);
-      card.appendChild(video);
-    } else {
-      const img = document.createElement("img");
-      img.src = item.url;
-      img.alt = item.title;
-      img.loading = "lazy";
-      card.appendChild(img);
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await base44.functions.invoke("getPackageContent", { package_id: packageId });
+      setData(res.data);
+    } catch (err) {
+      setError(err?.message || "Failed to verify access");
+    } finally {
+      setLoading(false);
     }
-  } else {
-    card.innerHTML = `
-      <div class="empty">
-        <div class="lock">🔒</div>
-        ${item.title}<br>
-        Awaiting protected file
+  }, [packageId]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const paid = params.get("paid");
+    if (token && paid) {
+      setJustPaid(true);
+      setCapturing(true);
+      base44.functions
+        .invoke("capturePaypalOrder", { order_id: token })
+        .then(() => load())
+        .catch((e) => {
+          setError(e?.response?.data?.error || e?.message || "Payment confirmation failed");
+        })
+        .finally(() => setCapturing(false));
+    } else {
+      load();
+    }
+  }, [packageId, load]);
+
+  if (!pkg) {
+    return (
+      <div className="min-h-[100svh] grid place-items-center px-6 text-center">
+        <div>
+          <p className="text-white/60">This collection doesn't exist.</p>
+          <Link to="/" className="mt-4 inline-flex items-center gap-2 text-accent hover:underline">
+            <ArrowLeft className="w-4 h-4" /> Back home
+          </Link>
+        </div>
       </div>
-    `;
+    );
   }
 
-  assets.appendChild(card);
-});
-</script>
+  const authorized = data?.authorized;
+  const photos = data?.items?.filter((i) => i.type === "image") || [];
+  const videos = data?.items?.filter((i) => i.type === "video" && !i.bonus) || [];
+  const bonus = data?.items?.filter((i) => i.bonus) || [];
 
-</body>
-</html>
+  return (
+    <div className="min-h-[100svh] relative">
+      <div className="absolute inset-0 -z-10 opacity-25">
+        <Image src={PORTAL_IMAGE} alt="" className="w-full h-full object-cover" fittingType="fill" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background" />
+      </div>
+
+      <div className="max-w-[1100px] mx-auto px-[6%] py-16">
+        <Link
+          to="/#collections"
+          className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-accent transition-colors mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" /> All collections
+        </Link>
+
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
+          <div>
+            <div className="text-accent uppercase tracking-[0.26em] text-[11px]">{pkg.id}</div>
+            <h1 className="font-heading font-medium text-[clamp(40px,7vw,72px)] leading-none mt-2">
+              {pkg.name}
+            </h1>
+            <p className="text-muted-foreground mt-3">${pkg.price} · {pkg.count}</p>
+          </div>
+          {authorized && (
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/50 text-accent pink-glow-strong text-xs font-semibold uppercase tracking-wider">
+              <ShieldCheck className="w-4 h-4" /> Verified Access
+            </span>
+          )}
+        </div>
+
+        {(loading || capturing) && (
+          <div className="flex flex-col items-center gap-3 text-white/70 py-20">
+            <Loader2 className="w-6 h-6 animate-spin text-primary animate-pulse-pink rounded-full" />
+            {capturing ? "Confirming your PayPal payment…" : "Verifying access…"}
+          </div>
+        )}
+
+        {!loading && !capturing && error && justPaid && !authorized && (
+          <div className="max-w-[520px]">
+            <div className="flex items-center gap-2 text-destructive mb-3">
+              <AlertCircle className="w-5 h-5" />
+              <h2 className="font-heading text-2xl">Payment not confirmed yet</h2>
+            </div>
+            <p className="text-muted-foreground leading-relaxed mb-6">{error}</p>
+            <button
+              onClick={load}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 hover:border-primary hover:text-accent transition-colors text-sm"
+            >
+              <RefreshCw className="w-4 h-4" /> Check again
+            </button>
+          </div>
+        )}
+
+        {!loading && !capturing && authorized && (
+          <article aria-live="polite" className="space-y-10">
+            <div className="flex items-center gap-2 text-accent text-sm">
+              <CheckCircle2 className="w-4 h-4" /> Payment confirmed — your content is unlocked.
+            </div>
+
+            {photos.length > 0 && (
+              <section>
+                <SectionHeading label="Photos" count={photos.length} />
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {photos.map((it) => (
+                    <AssetTile key={it.id} item={it} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {videos.length > 0 && (
+              <section>
+                <SectionHeading label="Videos" count={videos.length} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {videos.map((it) => (
+                    <AssetTile key={it.id} item={it} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {bonus.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-4">
+                  <Gift className="w-5 h-5 text-primary" />
+                  <h2 className="font-heading text-2xl">BONUS VIDEO 🎁</h2>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {bonus.map((it) => (
+                    <AssetTile key={it.id} item={it} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            <p className="text-xs text-white/40 pt-4">
+              Links expire shortly for your security — refresh the page to regenerate.
+            </p>
+          </article>
+        )}
+
+        {!loading && !capturing && !authorized && !justPaid && (
+          <article aria-live="polite" className="max-w-[520px]">
+            <div className="flex items-center gap-2 text-white/70 mb-3">
+              <Lock className="w-5 h-5 text-primary" />
+              <h2 className="font-heading text-2xl">Unlock this collection</h2>
+            </div>
+            <p className="text-muted-foreground leading-relaxed mb-6">
+              Pay securely with PayPal. The moment your payment is confirmed, this page updates and your
+              private content unlocks automatically — no extra steps.
+            </p>
+            <PayButton packageId={packageId} price={pkg.price} />
+            <p className="text-xs text-white/40 mt-5">
+              Already paid? Refresh the page — access is granted automatically once PayPal confirms.
+            </p>
+          </article>
+        )}
+
+        {!loading && !capturing && !authorized && justPaid && !error && (
+          <article aria-live="polite" className="max-w-[520px]">
+            <div className="flex items-center gap-2 text-accent mb-3">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <h2 className="font-heading text-2xl">Finalizing your access</h2>
+            </div>
+            <p className="text-muted-foreground leading-relaxed mb-6">
+              Your payment was received. We're confirming it with PayPal — your content will appear here in
+              a moment.
+            </p>
+            <button
+              onClick={load}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 hover:border-primary hover:text-accent transition-colors text-sm"
+            >
+              <RefreshCw className="w-4 h-4" /> Refresh
+            </button>
+          </article>
+        )}
+      </div>
+    </div>
+  );
+}
